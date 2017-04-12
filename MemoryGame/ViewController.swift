@@ -6,6 +6,7 @@
 //  Copyright © 2017 Edison. All rights reserved.
 //
 fileprivate let na : UInt32 = 999
+fileprivate let memoryRange : UInt32 = 110
 import UIKit
 
 class ViewController: UIViewController {
@@ -48,20 +49,20 @@ class ViewController: UIViewController {
         Choice3Button.imageView!.contentMode = .scaleAspectFit
         Choice4Button.setImage(UIImage(named: "\(choiceList[3])"), for: .normal)
         Choice4Button.imageView!.contentMode = .scaleAspectFit
-        numberLabel.text = ConvertNum(num: choiceList[RandomNum])
+        numberLabel.text = ViewController.ConvertNum(num: choiceList[RandomNum])
     }
     
     func generateRandomNumber() {
         isLevelUp()
         choiceList = [na, na, na, na]
-        var random = arc4random_uniform(110)
+        var random = arc4random_uniform(memoryRange)
         while randomList.contains(random) {
-            random = arc4random_uniform(110)
+            random = arc4random_uniform(memoryRange)
         }
         RandomNum = Int(arc4random_uniform(UInt32(4)))
         choiceList[RandomNum] = random
         while choiceList.contains(na) {
-            random = arc4random_uniform(110)
+            random = arc4random_uniform(memoryRange)
             //print(random)
             if choiceList.contains(random) {
                 continue
@@ -73,30 +74,32 @@ class ViewController: UIViewController {
                 }
             }
         }
-        numberLabel.text = ConvertNum(num: choiceList[RandomNum])
+        numberLabel.text = ViewController.ConvertNum(num: choiceList[RandomNum])
         randomList.append(choiceList[RandomNum])
         //print(choiceList)
     }
     
     func isLevelUp(){
-        if randomList.count == 110 {
+        if randomList.count == Int(memoryRange) {
+            //gameView.isUserInteractionEnabled = false
+            disableTouch()
             print(randomList)
             level += 1
             levelLabel.text = "level: \(level)"
             randomList = []
-            gameView.isUserInteractionEnabled = false
             ResultLabel.textColor = UIColor.blue
             ResultLabel.text = "Congrats! Level up!"
             ResultLabel.isHidden = false
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 4) {
                 self.ResultLabel.isHidden = true
-                self.gameView.isUserInteractionEnabled = true
+                self.enableTouch()
+                //self.gameView.isUserInteractionEnabled = true
             }
             
         }
     }
     
-    func ConvertNum(num: UInt32) -> String{
+    class func ConvertNum(num: UInt32) -> String{
         switch num {
         case 100:
             return "00"
@@ -125,7 +128,8 @@ class ViewController: UIViewController {
     
     func resultDisplay(index: Int) {
         ResultLabel.isHidden = false
-        gameView.isUserInteractionEnabled = false
+        //gameView.isUserInteractionEnabled = false
+        disableTouch()
         if RandomNum == index {
             ResultLabel.textColor = UIColor.green
             ResultLabel.text = "Correct!"
@@ -133,14 +137,16 @@ class ViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
                 self.ResultLabel.isHidden = true
                 self.updateImage()
-                self.gameView.isUserInteractionEnabled = true
+                //self.gameView.isUserInteractionEnabled = true
+                self.enableTouch()
             }
         }
         else {
             ResultLabel.textColor = UIColor.red
             ResultLabel.text = "Try again!"
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.8) {
-                self.gameView.isUserInteractionEnabled = true
+                //self.gameView.isUserInteractionEnabled = true
+                self.enableTouch()
             }
         }
     }
@@ -160,7 +166,26 @@ class ViewController: UIViewController {
     @IBAction func Choice4OnTap(_ sender: Any) {
         resultDisplay(index: 3)
     }
+    
+    @IBAction func onTapBack(_ sender: Any) {
+        performSegue(withIdentifier: "TwoNumberPracticeModeBackToMeun", sender: nil)
+    }
+    
 
+    func enableTouch(){
+        Choice1Button.isUserInteractionEnabled = true
+        Choice2Button.isUserInteractionEnabled = true
+        Choice3Button.isUserInteractionEnabled = true
+        Choice4Button.isUserInteractionEnabled = true
+    }
+    func disableTouch(){
+        Choice1Button.isUserInteractionEnabled = false
+        Choice2Button.isUserInteractionEnabled = false
+        Choice3Button.isUserInteractionEnabled = false
+        Choice4Button.isUserInteractionEnabled = false
+    }
 
 }
+
+
 
