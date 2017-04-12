@@ -60,6 +60,7 @@
 		B7836BE01E959F9C009B2C60 /* MemoryGame */ = {
 			isa = PBXGroup;
 			children = (
+				B7BD8E5A1E9DE7EF005BD3A8 /* Extensions */,
 				B7BD8E531E9DB8AB005BD3A8 /* View Controllers */,
 				B7836BE11E959F9C009B2C60 /* AppDelegate.swift */,
 				B7836BE51E959F9C009B2C60 /* Main.storyboard */,
@@ -79,6 +80,13 @@
 				B7BD8E581E9DDBD1005BD3A8 /* ComposeViewController.swift */,
 			);
 			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		B7BD8E5A1E9DE7EF005BD3A8 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

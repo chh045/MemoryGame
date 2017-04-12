@@ -15,22 +15,33 @@ class ViewController: UIViewController {
     @IBOutlet weak var numberLabel: UILabel!
     @IBOutlet weak var ResultLabel: UILabel!
     @IBOutlet weak var levelLabel: UILabel!
+    @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var Choice1Button: UIButton!
     @IBOutlet weak var Choice2Button: UIButton!
     @IBOutlet weak var Choice3Button: UIButton!
     @IBOutlet weak var Choice4Button: UIButton!
+    @IBOutlet weak var doneButton: UIButton!
     
+    var timer = Timer()
+    var counter = 0
     var RandomNum: Int!
     var randomList : [UInt32] = []
     var choiceList : [UInt32] = [na,na,na,na]
     var level = 1
+    var randomNumberSeriesString = ""
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTimer), userInfo: nil, repeats: true)
         ResultLabel.isHidden = true
+        doneButton.isHidden = true
+        doneButton.isEnabled = false
         updateImage()
+        
+        
+        print(randomNumberSeriesString)
 
     }
 
@@ -50,6 +61,11 @@ class ViewController: UIViewController {
         Choice4Button.setImage(UIImage(named: "\(choiceList[3])"), for: .normal)
         Choice4Button.imageView!.contentMode = .scaleAspectFit
         numberLabel.text = ViewController.ConvertNum(num: choiceList[RandomNum])
+    }
+    
+    func updateTimer(){
+        counter += 1
+        timerLabel.text = String(format: "%02d:%02d", counter/60, counter%60)
     }
     
     func generateRandomNumber() {
@@ -74,13 +90,17 @@ class ViewController: UIViewController {
                 }
             }
         }
-        numberLabel.text = ViewController.ConvertNum(num: choiceList[RandomNum])
+        let randomNumberText = ViewController.ConvertNum(num: choiceList[RandomNum])
+        numberLabel.text = randomNumberText
         randomList.append(choiceList[RandomNum])
+        randomNumberSeriesString += randomNumberText
         //print(choiceList)
     }
     
     func isLevelUp(){
         if randomList.count == Int(memoryRange) {
+            timer.invalidate()
+            timerLabel.textColor = UIColor.green
             //gameView.isUserInteractionEnabled = false
             disableTouch()
             print(randomList)
@@ -95,7 +115,8 @@ class ViewController: UIViewController {
                 self.enableTouch()
                 //self.gameView.isUserInteractionEnabled = true
             }
-            
+            doneButton.isHidden = false
+            doneButton.isEnabled = true
         }
     }
     
@@ -171,6 +192,9 @@ class ViewController: UIViewController {
         performSegue(withIdentifier: "TwoNumberPracticeModeBackToMeun", sender: nil)
     }
     
+    @IBAction func onTapDone(_ sender: Any) {
+        performSegue(withIdentifier: "TwoNumberPracticeToCompose", sender: nil)
+    }
 
     func enableTouch(){
         Choice1Button.isUserInteractionEnabled = true
@@ -183,6 +207,16 @@ class ViewController: UIViewController {
         Choice2Button.isUserInteractionEnabled = false
         Choice3Button.isUserInteractionEnabled = false
         Choice4Button.isUserInteractionEnabled = false
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "TwoNumberPracticeToCompose" {
+            let composeVC = segue.destination as! ComposeViewController
+            composeVC.counter = counter
+            composeVC.numberSeriesString = randomNumberSeriesString
+        }
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
     }
 
 }
