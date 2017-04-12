@@ -79,7 +79,6 @@ class ViewController: UIViewController {
         choiceList[RandomNum] = random
         while choiceList.contains(na) {
             random = arc4random_uniform(memoryRange)
-            //print(random)
             if choiceList.contains(random) {
                 continue
             }
@@ -94,16 +93,14 @@ class ViewController: UIViewController {
         numberLabel.text = randomNumberText
         randomList.append(choiceList[RandomNum])
         randomNumberSeriesString += randomNumberText
-        //print(choiceList)
     }
     
     func isLevelUp(){
         if randomList.count == Int(memoryRange) {
             timer.invalidate()
             timerLabel.textColor = UIColor.green
-            //gameView.isUserInteractionEnabled = false
             disableTouch()
-            print(randomList)
+            //print(randomList)
             level += 1
             levelLabel.text = "level: \(level)"
             randomList = []
@@ -215,8 +212,6 @@ class ViewController: UIViewController {
             composeVC.counter = counter
             composeVC.numberSeriesString = randomNumberSeriesString
         }
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
     }
 
 }

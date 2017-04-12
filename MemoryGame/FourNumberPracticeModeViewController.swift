@@ -52,7 +52,7 @@ class FourNumberPracticeModeViewController: UIViewController {
         numberLabel.text = randomNumberText
         randomNumberSeries += randomNumberText
         numberSeriesLabel.text = randomNumberSeries
-        if (numberSeriesLabel.text?.characters.count)! >= 4 {
+        if (numberSeriesLabel.text?.characters.count)! >= 100 {
             nextButton.isHidden = true
             nextButton.isEnabled = false
             doneButton.isHidden = false
